@@ -1,9 +1,21 @@
+import React from "react";
+import { Route, Routes, Link } from "react-router-dom";
 import "./App.css";
+
+// COMPONENT IMPORTS
+import { Home } from "./pages/home/Home";
 
 function App() {
     return (
         <div className="App">
-            <h1>Data Driven Documents</h1>
+            <nav className="navbar">
+                <Link to="/" className="navlink">
+                    #
+                </Link>
+            </nav>
+            <Routes>
+                <Route path="/" element={<Home />}></Route>
+            </Routes>
         </div>
     );
 }

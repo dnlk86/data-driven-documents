@@ -4,3 +4,18 @@
     text-align: center;
     background-color: var(--background-color);
 }
+
+.navbar {
+    position: fixed;
+    width: 100%;
+    height: var(--navbar-height);
+    background-color: silver;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 3%;
+}
+
+.navlink {
+    text-decoration: none;
+}
