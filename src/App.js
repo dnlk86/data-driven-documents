@@ -4,17 +4,23 @@ import "./App.css";
 
 // COMPONENT IMPORTS
 import { Home } from "./pages/home/Home";
+import { BarChart } from "./pages/bar-chart/BarChart";
 
 function App() {
     return (
         <div className="App">
             <nav className="navbar">
                 <Link to="/" className="navlink">
-                    #
+                    home
+                </Link>
+                /
+                <Link to="/bar-chart" className="navlink">
+                    bar-chart
                 </Link>
             </nav>
             <Routes>
                 <Route path="/" element={<Home />}></Route>
+                <Route path="/bar-chart" element={<BarChart />}></Route>
             </Routes>
         </div>
     );
