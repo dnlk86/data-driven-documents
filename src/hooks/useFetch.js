@@ -14,5 +14,5 @@ export function useFetch(endpoint) {
         };
         getData();
     }, [endpoint]);
-    return { loading, data };
+    return { data, loading };
 }
