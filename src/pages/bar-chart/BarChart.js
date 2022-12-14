@@ -3,16 +3,22 @@ import styles from "./BarChart.module.css";
 
 import * as d3 from "d3";
 import { useWindowSize } from "../../hooks/useWindowSize.js";
+import { useFetchAPI } from "../../hooks/useFetchAPI.js";
 
 export function BarChart() {
     const ref = useRef();
     const size = useWindowSize();
+    const data = useFetchAPI(
+        "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json"
+    );
+
+    console.log(data);
 
     useEffect(() => {
         const svg = d3.select(ref.current);
 
-        const h = size.height * 0.8;
-        const w = size.width * 0.9;
+        const h = Math.floor(size.height * 0.8);
+        const w = Math.floor(size.width * 0.9);
 
         svg.style("background-color", "var(--color-3)")
             .style("height", `${h}px`)
