@@ -25,13 +25,15 @@ export function BarChart() {
 
         if (data && !loading) {
             const dataset = data.data;
+            const dates = dataset.map((v) => new Date(v[0]));
+            const numbers = dataset.map((v) => v[1]);
+            const barWidth = w / dataset.length;
+
+            console.log(dataset);
 
             const xScale = d3
-                .scaleLinear()
-                .domain([
-                    d3.min(dataset, (d) => d[0].split("-")[0]),
-                    d3.max(dataset, (d) => d[0].split("-")[0]),
-                ])
+                .scaleTime()
+                .domain([d3.min(dates), d3.max(dates)])
                 .range([padding, w - padding]);
 
             const xAxis = d3.axisBottom(xScale);
@@ -41,16 +43,26 @@ export function BarChart() {
 
             const yScale = d3
                 .scaleLinear()
-                .domain([
-                    d3.min(dataset, (d) => d[1]),
-                    d3.max(dataset, (d) => d[1]),
-                ])
+                .domain([0, d3.max(numbers)])
                 .range([h - padding, padding]);
 
             const yAxis = d3.axisLeft(yScale);
             svg.select("#y-axis")
-                .attr("transform", "translate(" + padding + ", " + 0 + ")")
+                .attr("transform", "translate(" + padding + ", 0)")
                 .call(yAxis);
+
+            svg.selectAll("rect")
+                .data(dataset)
+                .enter()
+                .append("rect")
+                .attr("class", "bar")
+                .attr("data-date", (d, i) => d[0])
+                .attr("data-gdp", (d) => d[1])
+                .attr("x", (d, i) => xScale(dates[i]))
+                .attr("y", (d, i) => yScale(d[1]))
+                .attr("width", barWidth - 2)
+                .attr("height", (d) => h - yScale(d[1]) - padding)
+                .attr("fill", "navy");
         }
     }, [ref, size, data, loading]);
 
@@ -58,7 +70,6 @@ export function BarChart() {
         <div className={styles.barchart}>
             <h2 id="title">Bar Chart</h2>
             <svg ref={ref}>
-                {/* <g className="plot-area" /> */}
                 <g id="x-axis" />
                 <g id="y-axis" />
             </svg>
