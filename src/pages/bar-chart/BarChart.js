@@ -27,24 +27,33 @@ export function BarChart() {
             const dataset = data.data;
             const dates = dataset.map((v) => new Date(v[0]));
             const numbers = dataset.map((v) => v[1]);
-            const barWidth = w / dataset.length;
+            const barWidth = w / (dataset.length * 2 - 1);
 
-            console.log(dataset);
+            console.log(dates);
+            console.log(numbers);
+
+            const tooltip = d3.select("#tooltip");
+
+            svg.append("text")
+                .text("USA quarter GDP")
+                .attr("x", -500)
+                .attr("y", +100)
+                .attr("transform", "rotate(-90)");
 
             const xScale = d3
                 .scaleTime()
                 .domain([d3.min(dates), d3.max(dates)])
                 .range([padding, w - padding]);
 
-            const xAxis = d3.axisBottom(xScale);
-            svg.select("#x-axis")
-                .attr("transform", "translate(0," + (h - padding) + ")")
-                .call(xAxis);
-
             const yScale = d3
                 .scaleLinear()
                 .domain([0, d3.max(numbers)])
                 .range([h - padding, padding]);
+
+            const xAxis = d3.axisBottom(xScale);
+            svg.select("#x-axis")
+                .attr("transform", "translate(0," + (h - padding) + ")")
+                .call(xAxis);
 
             const yAxis = d3.axisLeft(yScale);
             svg.select("#y-axis")
@@ -56,13 +65,22 @@ export function BarChart() {
                 .enter()
                 .append("rect")
                 .attr("class", "bar")
-                .attr("data-date", (d, i) => d[0])
+                .attr("data-date", (d) => d[0])
                 .attr("data-gdp", (d) => d[1])
                 .attr("x", (d, i) => xScale(dates[i]))
-                .attr("y", (d, i) => yScale(d[1]))
-                .attr("width", barWidth - 2)
+                .attr("y", (d) => yScale(d[1]))
+                .attr("width", barWidth)
                 .attr("height", (d) => h - yScale(d[1]) - padding)
-                .attr("fill", "navy");
+                .attr("fill", "navy")
+                .on("mouseover", (e, v) => {
+                    let val = String(v).split(",");
+                    tooltip.style("opacity", 0.9);
+                    tooltip.html("d: " + val[0] + "<br />v: " + val[1]);
+                })
+                .on("mouseout", () => {
+                    tooltip.style("opacity", 0.5);
+                    tooltip.html("");
+                });
         }
     }, [ref, size, data, loading]);
 
@@ -73,6 +91,22 @@ export function BarChart() {
                 <g id="x-axis" />
                 <g id="y-axis" />
             </svg>
+            <div
+                id="tooltip"
+                style={{
+                    position: "absolute",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                    width: "250px",
+                    height: "125px",
+                    backgroundColor: "blue",
+                    borderRadius: "25px",
+                    opacity: "0.5",
+                    zIndex: "9999999",
+                }}
+            ></div>
         </div>
     );
 }
