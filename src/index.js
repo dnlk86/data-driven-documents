@@ -4,10 +4,12 @@ import "./index.css";
 import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
 
+console.log(process.env);
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <React.StrictMode>
-        <Router>
+        <Router basename="/data-driven-documents">
             <App />
         </Router>
     </React.StrictMode>

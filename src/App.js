@@ -10,7 +10,7 @@ function App() {
     return (
         <div className="App">
             <nav className="navbar">
-                <Link to="/" className="navlink">
+                <Link to="" className="navlink">
                     home
                 </Link>
                 /
@@ -19,14 +19,8 @@ function App() {
                 </Link>
             </nav>
             <Routes>
-                <Route
-                    path="/data-driven-documents/#"
-                    element={<Home />}
-                ></Route>
-                <Route
-                    path="/data-driven-documents/bar-chart"
-                    element={<BarChart />}
-                ></Route>
+                <Route exact path="" element={<Home />}></Route>
+                <Route path="/bar-chart" element={<BarChart />}></Route>
             </Routes>
         </div>
     );
