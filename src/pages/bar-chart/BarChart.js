@@ -17,13 +17,15 @@ export function BarChart() {
 
         const h = Math.floor(size.height * 0.8);
         const w = Math.floor(size.width * 0.9);
-        const padding = 50;
+        const padding = 60;
 
         svg.style("background-color", "var(--color-3)")
             .style("height", `${h}px`)
             .style("width", `${w}px`);
 
         if (data && !loading) {
+            console.log(data);
+
             const dataset = data.data;
             const dates = dataset.map((v) => new Date(v[0]));
             const numbers = dataset.map((v) => v[1]);
@@ -31,11 +33,50 @@ export function BarChart() {
 
             const tooltip = d3.select("#tooltip");
 
+            // barchart-label
             svg.append("text")
-                .text("USA quarter GDP")
-                .attr("x", -500)
-                .attr("y", +100)
-                .attr("transform", "rotate(-90)");
+                .text("USA quarterly GDP data")
+                .attr("class", "labels")
+                .attr("text-anchor", "middle")
+                .attr("x", w / 2)
+                .attr("y", 40)
+                .attr("fill", "white")
+                .style("font-size", "2rem")
+                .style("font-weight", "bold")
+                .style("text-decoration", "underline");
+
+            // y-axis-label
+            svg.append("text")
+                .text("GDP")
+                .attr("class", "labels")
+                .attr("text-anchor", "end")
+                .attr("x", padding)
+                .attr("y", 40)
+                .attr("fill", "white")
+                .style("font-size", "1.2rem")
+                .style("text-decoration", "underline");
+
+            // x-axis-label
+            svg.append("text")
+                .text("quarter")
+                .attr("class", "labels")
+                .attr("text-anchor", "end")
+                .attr("x", w - 20)
+                .attr("y", h - 20)
+                .attr("fill", "white")
+                .style("font-size", "1.2rem")
+                .style("text-decoration", "underline");
+
+            // source
+            svg.append("text")
+                .text("Source: " + data["source_name"])
+                .attr("class", "labels")
+                .attr("text-anchor", "start")
+                .attr("x", padding)
+                .attr("y", h - 20)
+                .attr("fill", "white")
+                .style("font-style", "italic")
+                .style("font-size", "1rem");
 
             const xScale = d3
                 .scaleTime()
@@ -50,12 +91,31 @@ export function BarChart() {
             const xAxis = d3.axisBottom(xScale);
             svg.select("#x-axis")
                 .attr("transform", "translate(0," + (h - padding) + ")")
+                .style("color", "white")
+                .style("font-size", "0.75rem")
+                .style("font-weight", "bold")
                 .call(xAxis);
 
             const yAxis = d3.axisLeft(yScale);
             svg.select("#y-axis")
                 .attr("transform", "translate(" + padding + ", 0)")
+                .style("color", "white")
+                .style("font-size", "0.75rem")
+                .style("font-weight", "bold")
                 .call(yAxis);
+
+            const getQuarter = (month) => {
+                switch (month) {
+                    case "01":
+                        return "Q1";
+                    case "04":
+                        return "Q2";
+                    case "07":
+                        return "Q3";
+                    default:
+                        return "Q4";
+                }
+            };
 
             svg.selectAll("rect")
                 .data(dataset)
@@ -72,14 +132,18 @@ export function BarChart() {
                 .attr("fill", "navy")
                 .on("mouseover", (e, v) => {
                     let val = String(v).split(",");
+                    let year = val[0].split("-")[0];
+                    let quarter = getQuarter(val[0].split("-")[1]);
                     tooltip.transition().duration(100).style("opacity", 0.9);
                     tooltip
                         .html(
-                            "<p>d: " +
-                                val[0] +
-                                "</p><p>v: $ " +
+                            "<p>" +
+                                year +
+                                " - " +
+                                quarter +
+                                "</p><p>" +
                                 val[1] +
-                                " billion</p>"
+                                "<br /></p><p>Billion $</p>"
                         )
                         .attr("data-date", val[0])
                         .style(
@@ -105,7 +169,7 @@ export function BarChart() {
 
     return (
         <div className={styles.barchart}>
-            <h2 id="title">Bar Chart</h2>
+            <h2 id="title">d3 bar chart implementation example</h2>
             <svg ref={ref}>
                 <g id="x-axis" />
                 <g id="y-axis" />
