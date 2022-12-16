@@ -19,8 +19,14 @@ function App() {
                 </Link>
             </nav>
             <Routes>
-                <Route path="/" element={<Home />}></Route>
-                <Route path="/bar-chart" element={<BarChart />}></Route>
+                <Route
+                    path="/data-driven-documents/#"
+                    element={<Home />}
+                ></Route>
+                <Route
+                    path="/data-driven-documents/bar-chart"
+                    element={<BarChart />}
+                ></Route>
             </Routes>
         </div>
     );
