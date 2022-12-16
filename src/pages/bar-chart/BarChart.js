@@ -27,11 +27,7 @@ export function BarChart() {
             const dataset = data.data;
             const dates = dataset.map((v) => new Date(v[0]));
             const numbers = dataset.map((v) => v[1]);
-            // const barWidth = w / (dataset.length * 2 - 1);
             const barWidth = w / dataset.length - 2;
-
-            console.log(dates);
-            console.log(numbers);
 
             const tooltip = d3.select("#tooltip");
 
@@ -76,8 +72,27 @@ export function BarChart() {
                 .attr("fill", "navy")
                 .on("mouseover", (e, v) => {
                     let val = String(v).split(",");
-                    tooltip.transition().duration(100).style("opacity", 0.5);
-                    tooltip.html("d: " + val[0] + "<br />v: " + val[1]);
+                    tooltip.transition().duration(100).style("opacity", 0.9);
+                    tooltip
+                        .html(
+                            "<p>d: " +
+                                val[0] +
+                                "</p><p>v: $ " +
+                                val[1] +
+                                " billion</p>"
+                        )
+                        .attr("data-date", val[0])
+                        .style(
+                            "left",
+                            Number(d3.select(e.currentTarget).attr("x")) + "px"
+                        )
+                        .style(
+                            "bottom",
+                            h -
+                                Number(d3.select(e.currentTarget).attr("y")) +
+                                50 +
+                                "px"
+                        );
                     d3.select(e.currentTarget).style("fill", "greenyellow");
                 })
                 .on("mouseout", (e, v) => {
@@ -99,15 +114,19 @@ export function BarChart() {
                 id="tooltip"
                 style={{
                     position: "absolute",
+                    bottom: "",
+                    left: "",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-evenly",
                     alignItems: "center",
-                    width: "250px",
+                    width: "200px",
                     height: "125px",
-                    backgroundColor: "blueviolet",
+                    backgroundColor: "greenyellow",
                     borderRadius: "25px",
                     opacity: "0",
+                    color: "#404040",
+                    pointerEvents: "none",
                     zIndex: "9999999",
                 }}
             ></div>
