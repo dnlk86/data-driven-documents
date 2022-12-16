@@ -27,7 +27,8 @@ export function BarChart() {
             const dataset = data.data;
             const dates = dataset.map((v) => new Date(v[0]));
             const numbers = dataset.map((v) => v[1]);
-            const barWidth = w / (dataset.length * 2 - 1);
+            // const barWidth = w / (dataset.length * 2 - 1);
+            const barWidth = w / dataset.length - 2;
 
             console.log(dates);
             console.log(numbers);
@@ -65,6 +66,7 @@ export function BarChart() {
                 .enter()
                 .append("rect")
                 .attr("class", "bar")
+                .attr("id", (d, i) => `bar${i + 1}`)
                 .attr("data-date", (d) => d[0])
                 .attr("data-gdp", (d) => d[1])
                 .attr("x", (d, i) => xScale(dates[i]))
@@ -74,12 +76,14 @@ export function BarChart() {
                 .attr("fill", "navy")
                 .on("mouseover", (e, v) => {
                     let val = String(v).split(",");
-                    tooltip.style("opacity", 0.9);
+                    tooltip.transition().duration(100).style("opacity", 0.5);
                     tooltip.html("d: " + val[0] + "<br />v: " + val[1]);
+                    d3.select(e.currentTarget).style("fill", "greenyellow");
                 })
-                .on("mouseout", () => {
-                    tooltip.style("opacity", 0.5);
+                .on("mouseout", (e, v) => {
+                    tooltip.transition().duration(100).style("opacity", 0);
                     tooltip.html("");
+                    d3.select(e.currentTarget).style("fill", "navy");
                 });
         }
     }, [ref, size, data, loading]);
@@ -101,9 +105,9 @@ export function BarChart() {
                     alignItems: "center",
                     width: "250px",
                     height: "125px",
-                    backgroundColor: "blue",
+                    backgroundColor: "blueviolet",
                     borderRadius: "25px",
-                    opacity: "0.5",
+                    opacity: "0",
                     zIndex: "9999999",
                 }}
             ></div>
