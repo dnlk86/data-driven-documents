@@ -1,10 +1,12 @@
 .homepage {
     padding-top: var(--navbar-height);
     min-height: 100vh;
-    text-align: center;
+    text-align: left;
     background-color: var(--color-2);
     color: var(--color-1);
     font-size: 1.5rem;
+    padding-left: 10%;
+    padding-right: 10%;
 }
 
 .homepage > h1 {
@@ -13,4 +15,14 @@
 
 .homepage > p {
     font-weight: 100;
+}
+
+.homepage > ul {
+    padding-left: 5%;
+}
+
+.homepage > h1,
+.homepage > h2,
+.homepage > h3 {
+    text-decoration: underline;
 }
