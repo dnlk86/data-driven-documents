@@ -5,6 +5,7 @@ import "./App.css";
 // COMPONENT IMPORTS
 import { Home } from "./pages/home/Home";
 import { BarChart } from "./pages/bar-chart/BarChart";
+import { ScatterplotGraph } from "./pages/scatterplot-graph/ScatterplotGraph";
 
 function App() {
     return (
@@ -17,10 +18,18 @@ function App() {
                 <Link to="/bar-chart" className="navlink">
                     bar-chart
                 </Link>
+                /
+                <Link to="/scatterplot-graph" className="navlink">
+                    scatterplot-graph
+                </Link>
             </nav>
             <Routes>
                 <Route exact path="" element={<Home />}></Route>
                 <Route path="/bar-chart" element={<BarChart />}></Route>
+                <Route
+                    path="/scatterplot-graph"
+                    element={<ScatterplotGraph />}
+                ></Route>
             </Routes>
         </div>
     );
