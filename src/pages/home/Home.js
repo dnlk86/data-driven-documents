@@ -1,10 +1,12 @@
 import React from "react";
 import styles from "./Home.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 export function Home() {
     return (
         <div className={styles.homepage}>
-            <h1>Welcome to my d3 project's collection website.</h1>
+            <h1>Welcome to my d3 project collection website.</h1>
             <br />
             <p>
                 D3 (or D3.js) is a JavaScript library for visualizing data using
@@ -31,6 +33,7 @@ export function Home() {
                 <li>d3.js for all charts</li>
                 <li>axios for API requests</li>
                 <li>gh-pages for deployment</li>
+                <li>fontawesome for icons</li>
             </ul>
             <br />
             <h3>A sidenote.</h3>
@@ -42,6 +45,16 @@ export function Home() {
                 and at the same time see how all those technologies fit together
                 in a relatively simple but fully functioning case study.
             </p>
+            <br />
+            <h3>Link to the repository of this project:</h3>
+            <br />
+            <a
+                href="https://github.com/dnlk86/data-driven-documents"
+                target="_blank"
+                rel="noreferrer"
+            >
+                <FontAwesomeIcon icon={faGithub} /> GitHub
+            </a>
         </div>
     );
 }

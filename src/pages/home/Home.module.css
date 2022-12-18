@@ -26,3 +26,15 @@
 .homepage > h3 {
     text-decoration: underline;
 }
+
+.homepage > a {
+    text-decoration: none;
+    color: white;
+    font-size: 2rem;
+    padding-left: 3%;
+}
+
+.homepage > a:hover {
+    color: navy;
+    transition: 200ms ease-in-out;
+}
