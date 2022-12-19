@@ -17,7 +17,7 @@ export function ScatterplotGraph() {
 
         const h = Math.floor(size.height * 0.8);
         const w = Math.floor(size.width * 0.9);
-        // const padding = 60;
+        const padding = 60;
 
         svg.style("background-color", "var(--color-3)")
             .style("height", `${h}px`)
@@ -25,6 +25,85 @@ export function ScatterplotGraph() {
 
         if (data && !loading) {
             console.log(data);
+
+            const years = data.map((v) => new Date(v["Year"] + "-01-01"));
+            const times = data.map((v) => v["Seconds"]);
+            // const barWidth = w / data.length - 2;
+
+            const tooltip = d3.select("#tooltip");
+
+            // barchart-label
+            svg.append("text")
+                .text("Doping in Professional Bicycle Racing")
+                .attr("class", "labels")
+                .attr("text-anchor", "middle")
+                .attr("x", w / 2)
+                .attr("y", 40)
+                .attr("fill", "white")
+                .style("font-size", "2rem")
+                .style("font-weight", "bold")
+                .style("text-decoration", "underline");
+
+            // y-axis-label
+            svg.append("text")
+                .text("Time")
+                .attr("class", "labels")
+                .attr("text-anchor", "end")
+                .attr("x", padding)
+                .attr("y", 40)
+                .attr("fill", "white")
+                .style("font-size", "1.2rem")
+                .style("text-decoration", "underline");
+
+            // x-axis-label
+            svg.append("text")
+                .text("Year")
+                .attr("class", "labels")
+                .attr("text-anchor", "end")
+                .attr("x", w - 20)
+                .attr("y", h - 20)
+                .attr("fill", "white")
+                .style("font-size", "1.2rem")
+                .style("text-decoration", "underline");
+
+            // source
+            // svg.append("text")
+            //     .text("Source: " + data["source_name"])
+            //     .attr("class", "labels")
+            //     .attr("text-anchor", "start")
+            //     .attr("x", padding)
+            //     .attr("y", h - 20)
+            //     .attr("fill", "white")
+            //     .style("font-style", "italic")
+            //     .style("font-size", "1rem");
+
+            const xScale = d3
+                .scaleTime()
+                .domain([d3.min(years), d3.max(years)])
+                .range([padding, w - padding]);
+
+            const yScale = d3
+                .scaleLinear()
+                .domain([d3.min(times), d3.max(times)])
+                .range([h - padding, padding]);
+
+            const xAxis = d3.axisBottom(xScale).ticks(years.length);
+            svg.select("#x-axis")
+                .attr("transform", "translate(0," + (h - padding) + ")")
+                .style("color", "white")
+                .style("font-size", "0.75rem")
+                .style("font-weight", "bold")
+                .call(xAxis);
+
+            const yAxis = d3
+                .axisLeft(yScale)
+                .tickValues(times.map((d, i) => d));
+            svg.select("#y-axis")
+                .attr("transform", "translate(" + padding + ", 0)")
+                .style("color", "white")
+                .style("font-size", "0.75rem")
+                .style("font-weight", "bold")
+                .call(yAxis);
         }
     }, [ref, size, data, loading]);
 
@@ -32,9 +111,29 @@ export function ScatterplotGraph() {
         <div className={styles.scatterplotgraph}>
             <h2 id="title">d3 scatterplot graph implementation example</h2>
             <svg ref={ref}>
-                {/* <g id="x-axis" /> */}
-                {/* <g id="y-axis" /> */}
+                <g id="x-axis" />
+                <g id="y-axis" />
             </svg>
+            <div
+                id="tooltip"
+                style={{
+                    position: "absolute",
+                    bottom: "",
+                    left: "",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                    width: "200px",
+                    height: "125px",
+                    backgroundColor: "greenyellow",
+                    borderRadius: "25px",
+                    opacity: "0",
+                    color: "#404040",
+                    pointerEvents: "none",
+                    zIndex: "9999999",
+                }}
+            ></div>
         </div>
     );
 }

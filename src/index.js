@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 import { HashRouter } from "react-router-dom";
 
-console.log(process.env);
+// console.log(process.env);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
