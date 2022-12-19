@@ -28,7 +28,6 @@ export function ScatterplotGraph() {
 
             const years = data.map((v) => new Date(v["Year"] + "-01-01"));
             const times = data.map((v) => v["Seconds"]);
-            // const barWidth = w / data.length - 2;
 
             const tooltip = d3.select("#tooltip");
 
@@ -82,6 +81,14 @@ export function ScatterplotGraph() {
                 .domain([d3.min(years), d3.max(years)])
                 .range([padding, w - padding]);
 
+            const formatTime = (s) => {
+                let min = Math.floor(s / 60);
+                let sec = Math.floor(s % 60);
+                return `${min < 10 ? "0" + min : min}:${
+                    sec < 10 ? "0" + sec : sec
+                }`;
+            };
+
             const yScale = d3
                 .scaleLinear()
                 .domain([d3.min(times), d3.max(times)])
@@ -95,9 +102,7 @@ export function ScatterplotGraph() {
                 .style("font-weight", "bold")
                 .call(xAxis);
 
-            const yAxis = d3
-                .axisLeft(yScale)
-                .tickValues(times.map((d, i) => d));
+            const yAxis = d3.axisLeft(yScale).ticks(10).tickFormat(formatTime);
             svg.select("#y-axis")
                 .attr("transform", "translate(" + padding + ", 0)")
                 .style("color", "white")
