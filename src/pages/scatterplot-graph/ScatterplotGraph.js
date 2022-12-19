@@ -27,6 +27,12 @@ export function ScatterplotGraph() {
             console.log(data);
 
             const years = data.map((v) => new Date(v["Year"] + "-01-01"));
+            const minYear = new Date(
+                Math.min(...data.map((v) => v["Year"])) - 1 + "-09-01"
+            );
+            const maxYear = new Date(
+                Math.max(...data.map((v) => v["Year"])) + 1 + "-01-01"
+            );
             const times = data.map((v) => v["Seconds"]);
 
             const tooltip = d3.select("#tooltip");
@@ -76,11 +82,6 @@ export function ScatterplotGraph() {
             //     .style("font-style", "italic")
             //     .style("font-size", "1rem");
 
-            const xScale = d3
-                .scaleTime()
-                .domain([d3.min(years), d3.max(years)])
-                .range([padding, w - padding]);
-
             const formatTime = (s) => {
                 let min = Math.floor(s / 60);
                 let sec = Math.floor(s % 60);
@@ -89,9 +90,15 @@ export function ScatterplotGraph() {
                 }`;
             };
 
+            const xScale = d3
+                .scaleTime()
+                // .domain([d3.min(years), d3.max(years)])
+                .domain([minYear, maxYear])
+                .range([padding, w - padding]);
+
             const yScale = d3
                 .scaleLinear()
-                .domain([d3.min(times), d3.max(times)])
+                .domain([d3.min(times) - 10, d3.max(times) + 10])
                 .range([h - padding, padding]);
 
             const xAxis = d3.axisBottom(xScale).ticks(years.length);
@@ -102,13 +109,27 @@ export function ScatterplotGraph() {
                 .style("font-weight", "bold")
                 .call(xAxis);
 
-            const yAxis = d3.axisLeft(yScale).ticks(10).tickFormat(formatTime);
+            const yAxis = d3.axisLeft(yScale).ticks(13).tickFormat(formatTime);
             svg.select("#y-axis")
                 .attr("transform", "translate(" + padding + ", 0)")
                 .style("color", "white")
                 .style("font-size", "0.75rem")
                 .style("font-weight", "bold")
                 .call(yAxis);
+
+            svg.selectAll("circle")
+                .data(data)
+                .enter()
+                .append("circle")
+                .attr("class", "dot")
+                .attr("id", (d, i) => `dot${i + 1}`)
+                .attr("data-xvalue", (d) => new Date(d["Year"] + "-01-01"))
+                .attr("data-yvalue", (d) => d["Seconds"])
+                .attr("cx", (d) => xScale(new Date(d["Year"] + "-01-01")))
+                .attr("cy", (d) => yScale(d["Seconds"]))
+                .attr("r", "5px")
+                .attr("fill", "navy")
+                .attr("opacity", "0.5");
         }
     }, [ref, size, data, loading]);
 
