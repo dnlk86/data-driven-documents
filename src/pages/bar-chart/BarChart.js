@@ -157,7 +157,9 @@ export function BarChart() {
                                 50 +
                                 "px"
                         );
-                    d3.select(e.currentTarget).style("fill", "greenyellow");
+                    d3.select(e.currentTarget)
+                        .style("fill", "greenyellow")
+                        .style("cursor", "pointer");
                 })
                 .on("mouseout", (e, v) => {
                     tooltip.transition().duration(100).style("opacity", 0);

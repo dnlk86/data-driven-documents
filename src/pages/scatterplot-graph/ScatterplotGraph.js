@@ -128,10 +128,11 @@ export function ScatterplotGraph() {
                 })
                 .attr("cx", (d) => xScale(new Date(d["Year"] + "-01-01")))
                 .attr("cy", (d) => yScale(d["Seconds"]))
-                .attr("r", "5px")
+                .attr("r", "7px")
                 .attr("fill", (d) => {
-                    return d["Doping"] === "" ? "red" : "navy";
+                    return d["Doping"] === "" ? "navy" : "#ED0000";
                 })
+                .style("stroke", "black")
                 .attr("opacity", "0.5")
                 .on("mouseover", (e, v) => {
                     tooltip.transition().duration(100).style("opacity", 0.9);
@@ -156,13 +157,15 @@ export function ScatterplotGraph() {
                                 50 +
                                 "px"
                         );
-                    d3.select(e.currentTarget).style("fill", "greenyellow");
+                    d3.select(e.currentTarget)
+                        .style("fill", "darkorange")
+                        .style("cursor", "pointer");
                 })
                 .on("mouseout", (e, v) => {
                     tooltip.transition().duration(100).style("opacity", 0);
                     tooltip.html("");
                     d3.select(e.currentTarget).style("fill", () => {
-                        return v["Doping"] === "" ? "red" : "navy";
+                        return v["Doping"] === "" ? "navy" : "#ED0000";
                     });
                 });
         }
@@ -181,25 +184,36 @@ export function ScatterplotGraph() {
                     position: "absolute",
                     bottom: "",
                     left: "",
-                    // display: "flex",
-                    // flexDirection: "column",
-                    // justifyContent: "space-evenly",
-                    // alignItems: "center",
-                    // flexWrap: "wrap",
                     padding: "10px",
                     textAlign: "left",
                     width: "250px",
                     height: "max-content",
-                    backgroundColor: "greenyellow",
+                    backgroundColor: "darkorange",
                     borderRadius: "10px",
+                    border: "1px solid black",
                     opacity: "0",
-                    color: "#404040",
+                    // color: "#404040",
+                    color: "black",
                     fontSize: "0.75rem",
+                    fontWeight: "bold",
                     pointerEvents: "none",
                     zIndex: "9999999",
                 }}
             ></div>
-            <div id="legend"></div>
+            <div
+                id="legend"
+                style={{
+                    position: "absolute",
+                    right: "5%",
+                    textAlign: "left",
+                    fontSize: "1rem",
+                }}
+            >
+                <ul>
+                    <li style={{ color: "red" }}>Doping allegation</li>
+                    <li style={{ color: "navy" }}>No doping allegation</li>
+                </ul>
+            </div>
         </div>
     );
 }
