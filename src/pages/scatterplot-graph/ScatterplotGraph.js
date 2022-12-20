@@ -47,6 +47,18 @@ export function ScatterplotGraph() {
                 .style("font-weight", "bold")
                 .style("text-decoration", "underline");
 
+            // barchart-label
+            svg.append("text")
+                .text("35 Fastest times up Alpe d'Huez")
+                .attr("class", "labels")
+                .attr("text-anchor", "middle")
+                .attr("x", w / 2)
+                .attr("y", 70)
+                .attr("fill", "white")
+                .style("font-size", "1.5rem")
+                .style("font-weight", "bold")
+                .style("text-decoration", "underline");
+
             // y-axis-label
             svg.append("text")
                 .text("Time")
@@ -68,17 +80,6 @@ export function ScatterplotGraph() {
                 .attr("fill", "white")
                 .style("font-size", "1.2rem")
                 .style("text-decoration", "underline");
-
-            // source
-            // svg.append("text")
-            //     .text("Source: " + data["source_name"])
-            //     .attr("class", "labels")
-            //     .attr("text-anchor", "start")
-            //     .attr("x", padding)
-            //     .attr("y", h - 20)
-            //     .attr("fill", "white")
-            //     .style("font-style", "italic")
-            //     .style("font-size", "1rem");
 
             const formatTime = (s) => {
                 let min = Math.floor(s / 60);
@@ -158,7 +159,7 @@ export function ScatterplotGraph() {
                                 "px"
                         );
                     d3.select(e.currentTarget)
-                        .style("fill", "darkorange")
+                        .style("fill", "#404040")
                         .style("cursor", "pointer");
                 })
                 .on("mouseout", (e, v) => {
@@ -188,12 +189,12 @@ export function ScatterplotGraph() {
                     textAlign: "left",
                     width: "250px",
                     height: "max-content",
-                    backgroundColor: "darkorange",
+                    backgroundColor: "#404040",
                     borderRadius: "10px",
                     border: "1px solid black",
                     opacity: "0",
                     // color: "#404040",
-                    color: "black",
+                    color: "white",
                     fontSize: "0.75rem",
                     fontWeight: "bold",
                     pointerEvents: "none",
@@ -210,7 +211,7 @@ export function ScatterplotGraph() {
                 }}
             >
                 <ul>
-                    <li style={{ color: "red" }}>Doping allegation</li>
+                    <li style={{ color: "#ED0000" }}>Doping allegation</li>
                     <li style={{ color: "navy" }}>No doping allegation</li>
                 </ul>
             </div>

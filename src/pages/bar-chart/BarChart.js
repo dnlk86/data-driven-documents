@@ -58,7 +58,7 @@ export function BarChart() {
 
             // x-axis-label
             svg.append("text")
-                .text("quarter")
+                .text("Year")
                 .attr("class", "labels")
                 .attr("text-anchor", "end")
                 .attr("x", w - 20)
