@@ -24,8 +24,6 @@ export function ScatterplotGraph() {
             .style("width", `${w}px`);
 
         if (data && !loading) {
-            console.log(data);
-
             const years = data.map((v) => new Date(v["Year"] + "-01-01"));
             const minYear = new Date(
                 Math.min(...data.map((v) => v["Year"])) - 1 + "-09-01"
@@ -92,7 +90,6 @@ export function ScatterplotGraph() {
 
             const xScale = d3
                 .scaleTime()
-                // .domain([d3.min(years), d3.max(years)])
                 .domain([minYear, maxYear])
                 .range([padding, w - padding]);
 
@@ -124,12 +121,50 @@ export function ScatterplotGraph() {
                 .attr("class", "dot")
                 .attr("id", (d, i) => `dot${i + 1}`)
                 .attr("data-xvalue", (d) => new Date(d["Year"] + "-01-01"))
-                .attr("data-yvalue", (d) => d["Seconds"])
+                .attr("data-yvalue", (d) => {
+                    let date = new Date();
+                    date.setTime(d["Seconds"] * 1000);
+                    return date;
+                })
                 .attr("cx", (d) => xScale(new Date(d["Year"] + "-01-01")))
                 .attr("cy", (d) => yScale(d["Seconds"]))
                 .attr("r", "5px")
-                .attr("fill", "navy")
-                .attr("opacity", "0.5");
+                .attr("fill", (d) => {
+                    return d["Doping"] === "" ? "red" : "navy";
+                })
+                .attr("opacity", "0.5")
+                .on("mouseover", (e, v) => {
+                    tooltip.transition().duration(100).style("opacity", 0.9);
+                    tooltip
+                        .attr("data-year", new Date(v["Year"] + "-01-01"))
+                        .html(
+                            `${v["Name"]} - ${v["Nationality"]}<br />` +
+                                `Year: ${v["Year"]} - Time: ${v["Time"]}<br />` +
+                                `${
+                                    v["Doping"] &&
+                                    'Doping: "' + v["Doping"] + '"'
+                                }`
+                        )
+                        .style(
+                            "left",
+                            Number(d3.select(e.currentTarget).attr("cx")) + "px"
+                        )
+                        .style(
+                            "bottom",
+                            h -
+                                Number(d3.select(e.currentTarget).attr("cy")) +
+                                50 +
+                                "px"
+                        );
+                    d3.select(e.currentTarget).style("fill", "greenyellow");
+                })
+                .on("mouseout", (e, v) => {
+                    tooltip.transition().duration(100).style("opacity", 0);
+                    tooltip.html("");
+                    d3.select(e.currentTarget).style("fill", () => {
+                        return v["Doping"] === "" ? "red" : "navy";
+                    });
+                });
         }
     }, [ref, size, data, loading]);
 
@@ -146,20 +181,25 @@ export function ScatterplotGraph() {
                     position: "absolute",
                     bottom: "",
                     left: "",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-evenly",
-                    alignItems: "center",
-                    width: "200px",
-                    height: "125px",
+                    // display: "flex",
+                    // flexDirection: "column",
+                    // justifyContent: "space-evenly",
+                    // alignItems: "center",
+                    // flexWrap: "wrap",
+                    padding: "10px",
+                    textAlign: "left",
+                    width: "250px",
+                    height: "max-content",
                     backgroundColor: "greenyellow",
-                    borderRadius: "25px",
+                    borderRadius: "10px",
                     opacity: "0",
                     color: "#404040",
+                    fontSize: "0.75rem",
                     pointerEvents: "none",
                     zIndex: "9999999",
                 }}
             ></div>
+            <div id="legend"></div>
         </div>
     );
 }
