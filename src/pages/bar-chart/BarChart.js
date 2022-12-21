@@ -19,7 +19,7 @@ export function BarChart() {
         const w = Math.floor(size.width * 0.9);
         const padding = 60;
 
-        svg.style("background-color", "var(--color-3)")
+        svg.style("background-color", "var(--color-1)")
             .style("height", `${h}px`)
             .style("width", `${w}px`);
 
@@ -33,16 +33,15 @@ export function BarChart() {
 
             const tooltip = d3.select("#tooltip");
 
-            // barchart-label
+            // barchart-title
             svg.append("text")
                 .text("USA quarterly GDP data")
                 .attr("class", "labels")
                 .attr("text-anchor", "middle")
                 .attr("x", w / 2)
                 .attr("y", 40)
-                .attr("fill", "white")
-                .style("font-size", "2rem")
-                .style("font-weight", "bold")
+                .attr("fill", "var(--color-5)")
+                .style("font-size", "1.5rem")
                 .style("text-decoration", "underline");
 
             // y-axis-label
@@ -52,7 +51,7 @@ export function BarChart() {
                 .attr("text-anchor", "end")
                 .attr("x", padding)
                 .attr("y", 40)
-                .attr("fill", "white")
+                .attr("fill", "var(--color-5)")
                 .style("font-size", "1.2rem")
                 .style("text-decoration", "underline");
 
@@ -63,7 +62,7 @@ export function BarChart() {
                 .attr("text-anchor", "end")
                 .attr("x", w - 20)
                 .attr("y", h - 20)
-                .attr("fill", "white")
+                .attr("fill", "var(--color-5)")
                 .style("font-size", "1.2rem")
                 .style("text-decoration", "underline");
 
@@ -74,7 +73,7 @@ export function BarChart() {
                 .attr("text-anchor", "start")
                 .attr("x", padding)
                 .attr("y", h - 20)
-                .attr("fill", "white")
+                .attr("fill", "var(--color-5)")
                 .style("font-style", "italic")
                 .style("font-size", "1rem");
 
@@ -91,7 +90,7 @@ export function BarChart() {
             const xAxis = d3.axisBottom(xScale);
             svg.select("#x-axis")
                 .attr("transform", "translate(0," + (h - padding) + ")")
-                .style("color", "white")
+                .style("color", "var(--color-5)")
                 .style("font-size", "0.75rem")
                 .style("font-weight", "bold")
                 .call(xAxis);
@@ -99,7 +98,7 @@ export function BarChart() {
             const yAxis = d3.axisLeft(yScale);
             svg.select("#y-axis")
                 .attr("transform", "translate(" + padding + ", 0)")
-                .style("color", "white")
+                .style("color", "var(--color-5)")
                 .style("font-size", "0.75rem")
                 .style("font-weight", "bold")
                 .call(yAxis);
@@ -148,7 +147,9 @@ export function BarChart() {
                         .attr("data-date", val[0])
                         .style(
                             "left",
-                            Number(d3.select(e.currentTarget).attr("x")) + "px"
+                            Number(d3.select(e.currentTarget).attr("x")) +
+                                padding +
+                                "px"
                         )
                         .style(
                             "bottom",
@@ -186,12 +187,14 @@ export function BarChart() {
                     flexDirection: "column",
                     justifyContent: "space-evenly",
                     alignItems: "center",
-                    width: "200px",
-                    height: "125px",
+                    width: "150px",
+                    height: "max-content",
                     backgroundColor: "greenyellow",
-                    borderRadius: "25px",
+                    borderRadius: "10px",
                     opacity: "0",
-                    color: "#404040",
+                    color: "var(--color-5)",
+                    fontSize: "1rem",
+                    fontWeight: "bold",
                     pointerEvents: "none",
                     zIndex: "9999999",
                 }}

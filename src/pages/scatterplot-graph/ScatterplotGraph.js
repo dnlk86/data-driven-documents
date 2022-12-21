@@ -19,7 +19,7 @@ export function ScatterplotGraph() {
         const w = Math.floor(size.width * 0.9);
         const padding = 60;
 
-        svg.style("background-color", "var(--color-3)")
+        svg.style("background-color", "var(--color-1)")
             .style("height", `${h}px`)
             .style("width", `${w}px`);
 
@@ -35,28 +35,26 @@ export function ScatterplotGraph() {
 
             const tooltip = d3.select("#tooltip");
 
-            // barchart-label
+            // barchart-title
             svg.append("text")
                 .text("Doping in Professional Bicycle Racing")
                 .attr("class", "labels")
                 .attr("text-anchor", "middle")
                 .attr("x", w / 2)
                 .attr("y", 40)
-                .attr("fill", "white")
-                .style("font-size", "2rem")
-                .style("font-weight", "bold")
+                .attr("fill", "var(--color-5)")
+                .style("font-size", "1.5rem")
                 .style("text-decoration", "underline");
 
-            // barchart-label
+            // barchart-description
             svg.append("text")
                 .text("35 Fastest times up Alpe d'Huez")
                 .attr("class", "labels")
                 .attr("text-anchor", "middle")
                 .attr("x", w / 2)
                 .attr("y", 70)
-                .attr("fill", "white")
-                .style("font-size", "1.5rem")
-                .style("font-weight", "bold")
+                .attr("fill", "var(--color-5)")
+                .style("font-size", "1.0rem")
                 .style("text-decoration", "underline");
 
             // y-axis-label
@@ -66,7 +64,7 @@ export function ScatterplotGraph() {
                 .attr("text-anchor", "end")
                 .attr("x", padding)
                 .attr("y", 40)
-                .attr("fill", "white")
+                .attr("fill", "var(--color-5)")
                 .style("font-size", "1.2rem")
                 .style("text-decoration", "underline");
 
@@ -77,7 +75,7 @@ export function ScatterplotGraph() {
                 .attr("text-anchor", "end")
                 .attr("x", w - 20)
                 .attr("y", h - 20)
-                .attr("fill", "white")
+                .attr("fill", "var(--color-5)")
                 .style("font-size", "1.2rem")
                 .style("text-decoration", "underline");
 
@@ -102,7 +100,7 @@ export function ScatterplotGraph() {
             const xAxis = d3.axisBottom(xScale).ticks(years.length);
             svg.select("#x-axis")
                 .attr("transform", "translate(0," + (h - padding) + ")")
-                .style("color", "white")
+                .style("color", "var(--color-5)")
                 .style("font-size", "0.75rem")
                 .style("font-weight", "bold")
                 .call(xAxis);
@@ -110,7 +108,7 @@ export function ScatterplotGraph() {
             const yAxis = d3.axisLeft(yScale).ticks(13).tickFormat(formatTime);
             svg.select("#y-axis")
                 .attr("transform", "translate(" + padding + ", 0)")
-                .style("color", "white")
+                .style("color", "var(--color-5)")
                 .style("font-size", "0.75rem")
                 .style("font-weight", "bold")
                 .call(yAxis);
@@ -131,9 +129,9 @@ export function ScatterplotGraph() {
                 .attr("cy", (d) => yScale(d["Seconds"]))
                 .attr("r", "7px")
                 .attr("fill", (d) => {
-                    return d["Doping"] === "" ? "navy" : "#ED0000";
+                    return d["Doping"] === "" ? "navy" : "#FF6D00";
                 })
-                .style("stroke", "black")
+                .style("stroke", "var(--color-5)")
                 .attr("opacity", "0.5")
                 .on("mouseover", (e, v) => {
                     tooltip.transition().duration(100).style("opacity", 0.9);
@@ -149,7 +147,9 @@ export function ScatterplotGraph() {
                         )
                         .style(
                             "left",
-                            Number(d3.select(e.currentTarget).attr("cx")) + "px"
+                            Number(d3.select(e.currentTarget).attr("cx")) +
+                                padding +
+                                "px"
                         )
                         .style(
                             "bottom",
@@ -159,14 +159,14 @@ export function ScatterplotGraph() {
                                 "px"
                         );
                     d3.select(e.currentTarget)
-                        .style("fill", "#404040")
+                        .style("fill", "greenyellow")
                         .style("cursor", "pointer");
                 })
                 .on("mouseout", (e, v) => {
                     tooltip.transition().duration(100).style("opacity", 0);
                     tooltip.html("");
                     d3.select(e.currentTarget).style("fill", () => {
-                        return v["Doping"] === "" ? "navy" : "#ED0000";
+                        return v["Doping"] === "" ? "navy" : "#FF6D00";
                     });
                 });
         }
@@ -189,12 +189,10 @@ export function ScatterplotGraph() {
                     textAlign: "left",
                     width: "250px",
                     height: "max-content",
-                    backgroundColor: "#404040",
+                    backgroundColor: "greenyellow",
                     borderRadius: "10px",
-                    border: "1px solid black",
                     opacity: "0",
-                    // color: "#404040",
-                    color: "white",
+                    color: "var(--color-5)",
                     fontSize: "0.75rem",
                     fontWeight: "bold",
                     pointerEvents: "none",
@@ -211,8 +209,8 @@ export function ScatterplotGraph() {
                 }}
             >
                 <ul>
-                    <li style={{ color: "#ED0000" }}>Doping allegation</li>
-                    <li style={{ color: "navy" }}>No doping allegation</li>
+                    <li style={{ color: "#FF6D00" }}>Doping allegations</li>
+                    <li style={{ color: "navy" }}>No allegations</li>
                 </ul>
             </div>
         </div>

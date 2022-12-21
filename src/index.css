@@ -2,9 +2,11 @@
 
 :root {
     --navbar-height: 50px;
-    --color-1: whitesmoke;
+    --color-1: white;
     --color-2: blueviolet;
     --color-3: silver;
+    --color-4: #404040;
+    --color-5: #181818;
 }
 
 * {
