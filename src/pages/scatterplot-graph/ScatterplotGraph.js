@@ -38,10 +38,11 @@ export function ScatterplotGraph() {
             // barchart-title
             svg.append("text")
                 .text("Doping in Professional Bicycle Racing")
+                .attr("id", "title")
                 .attr("class", "labels")
                 .attr("text-anchor", "middle")
                 .attr("x", w / 2)
-                .attr("y", 40)
+                .attr("y", 30)
                 .attr("fill", "var(--color-5)")
                 .style("font-size", "1.5rem")
                 .style("text-decoration", "underline");
@@ -49,10 +50,11 @@ export function ScatterplotGraph() {
             // barchart-description
             svg.append("text")
                 .text("35 Fastest times up Alpe d'Huez")
+                .attr("id", "description")
                 .attr("class", "labels")
                 .attr("text-anchor", "middle")
                 .attr("x", w / 2)
-                .attr("y", 70)
+                .attr("y", 60)
                 .attr("fill", "var(--color-5)")
                 .style("font-size", "1.0rem")
                 .style("text-decoration", "underline");
@@ -174,7 +176,7 @@ export function ScatterplotGraph() {
 
     return (
         <div className={styles.scatterplotgraph}>
-            <h2 id="title">d3 scatterplot graph example</h2>
+            <h2 id="page-title">d3 scatterplot graph example</h2>
             <svg ref={ref}>
                 <g id="x-axis" />
                 <g id="y-axis" />

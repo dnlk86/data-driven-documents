@@ -36,10 +36,11 @@ export function BarChart() {
             // barchart-title
             svg.append("text")
                 .text("USA quarterly GDP data")
+                .attr("id", "title")
                 .attr("class", "labels")
                 .attr("text-anchor", "middle")
                 .attr("x", w / 2)
-                .attr("y", 40)
+                .attr("y", 30)
                 .attr("fill", "var(--color-5)")
                 .style("font-size", "1.5rem")
                 .style("text-decoration", "underline");
@@ -172,7 +173,7 @@ export function BarChart() {
 
     return (
         <div className={styles.barchart}>
-            <h2 id="title">d3 bar chart example</h2>
+            <h2 id="page-title">d3 bar chart example</h2>
             <svg ref={ref}>
                 <g id="x-axis" />
                 <g id="y-axis" />
