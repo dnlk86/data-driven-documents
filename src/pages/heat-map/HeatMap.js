@@ -37,7 +37,8 @@ export function HeatMap() {
             // console.log(Math.min(...variances));
             // console.log(Math.max(...variances));
 
-            const barWidth = w / (2015 - 1753 + 1);
+            const cellWidth = w / (2015 - 1753 + 1);
+            const cellHeight = (h - 2 * padding) / 12;
 
             const tooltip = d3.select("#tooltip");
 
@@ -119,34 +120,21 @@ export function HeatMap() {
             console.log(months);
 
             const formatMonths = (n) => {
-                switch (n) {
-                    case 1:
-                        return "January";
-                    case 2:
-                        return "February";
-                    case 3:
-                        return "March";
-                    case 4:
-                        return "April";
-                    case 5:
-                        return "May";
-                    case 6:
-                        return "June";
-                    case 7:
-                        return "July";
-                    case 8:
-                        return "August";
-                    case 9:
-                        return "September";
-                    case 10:
-                        return "October";
-                    case 11:
-                        return "November";
-                    case 12:
-                        return "December";
-                    default:
-                        console.log("Not a month!");
-                }
+                let monthsArray = [
+                    "January",
+                    "February",
+                    "March",
+                    "April",
+                    "May",
+                    "June",
+                    "July",
+                    "August",
+                    "September",
+                    "October",
+                    "November",
+                    "December",
+                ];
+                return monthsArray[n - 1];
             };
 
             const yAxis = d3.axisLeft(yScale).tickFormat(formatMonths);
@@ -187,51 +175,52 @@ export function HeatMap() {
                 .append("rect")
                 .attr("class", "cell")
                 .attr("id", (d, i) => `cell${i + 1}`)
-                // .attr("data-date", (d) => d[0])
-                // .attr("data-gdp", (d) => d[1])
+                .attr("data-year", (d) => d.year)
+                .attr("data-month", (d) => d.month - 1)
+                .attr("data-temp", (d) => data.baseTemperature + d.variance)
                 .attr("x", (d) => xScale(new Date(d.year + "-01-01")))
                 .attr("y", (d) => yScale(d.month))
-                .attr("width", barWidth)
-                .attr("height", (h - 2 * padding) / 12)
-                .attr("fill", (d) => cellFill(d.variance));
-            // .on("mouseover", (e, v) => {
-            //     let val = String(v).split(",");
-            //     let year = val[0].split("-")[0];
-            //     let quarter = getQuarter(val[0].split("-")[1]);
-            //     tooltip.transition().duration(100).style("opacity", 0.9);
-            //     tooltip
-            //         .html(
-            //             "<p>" +
-            //                 year +
-            //                 " - " +
-            //                 quarter +
-            //                 "</p><p>" +
-            //                 val[1] +
-            //                 "<br /></p><p>Billion $</p>"
-            //         )
-            //         .attr("data-date", val[0])
-            //         .style(
-            //             "left",
-            //             Number(d3.select(e.currentTarget).attr("x")) +
-            //                 padding +
-            //                 "px"
-            //         )
-            //         .style(
-            //             "bottom",
-            //             h -
-            //                 Number(d3.select(e.currentTarget).attr("y")) +
-            //                 50 +
-            //                 "px"
-            //         );
-            //     d3.select(e.currentTarget)
-            //         .style("fill", "greenyellow")
-            //         .style("cursor", "pointer");
-            // })
-            // .on("mouseout", (e, v) => {
-            //     tooltip.transition().duration(100).style("opacity", 0);
-            //     tooltip.html("");
-            //     d3.select(e.currentTarget).style("fill", "navy");
-            // });
+                .attr("width", cellWidth)
+                .attr("height", cellHeight)
+                .attr("fill", (d) => cellFill(d.variance))
+                .on("mouseover", (e, v) => {
+                    tooltip.transition().duration(100).style("opacity", 0.9);
+                    tooltip
+                        .html(
+                            `<p>Year: ${
+                                v.year
+                            }</p><br /><p>Month: ${formatMonths(
+                                v.month
+                            )}</p><br /><p>Variance: ${v.variance.toFixed(
+                                3
+                            )}°C</p><br /><p>Temperature: ${(
+                                v.variance + data.baseTemperature
+                            ).toFixed(3)}°C</p>`
+                        )
+                        .attr("data-year", v.year)
+                        .style(
+                            "left",
+                            Number(d3.select(e.currentTarget).attr("x")) + "px"
+                        )
+                        .style(
+                            "bottom",
+                            h -
+                                Number(d3.select(e.currentTarget).attr("y")) +
+                                cellHeight / 2 +
+                                "px"
+                        );
+                    d3.select(e.currentTarget)
+                        .style("fill", "greenyellow")
+                        .style("cursor", "pointer");
+                })
+                .on("mouseout", (e, v) => {
+                    tooltip.transition().duration(100).style("opacity", 0);
+                    tooltip.html("");
+                    d3.select(e.currentTarget).style(
+                        "fill",
+                        cellFill(v.variance)
+                    );
+                });
         }
     }, [ref, size, data, loading]);
 
@@ -248,17 +237,15 @@ export function HeatMap() {
                     position: "absolute",
                     bottom: "",
                     left: "",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-evenly",
-                    alignItems: "center",
-                    width: "150px",
+                    padding: "10px",
+                    textAlign: "left",
+                    width: "250px",
                     height: "max-content",
                     backgroundColor: "greenyellow",
                     borderRadius: "10px",
                     opacity: "0",
                     color: "var(--color-5)",
-                    fontSize: "1rem",
+                    fontSize: "0.75rem",
                     fontWeight: "bold",
                     pointerEvents: "none",
                     zIndex: "9999999",
