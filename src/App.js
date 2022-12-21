@@ -6,6 +6,7 @@ import "./App.css";
 import { Home } from "./pages/home/Home";
 import { BarChart } from "./pages/bar-chart/BarChart";
 import { ScatterplotGraph } from "./pages/scatterplot-graph/ScatterplotGraph";
+import { HeatMap } from "./pages/heat-map/HeatMap";
 
 function App() {
     return (
@@ -22,6 +23,10 @@ function App() {
                 <Link to="/scatterplot-graph" className="navlink">
                     scatterplot-graph
                 </Link>
+                /
+                <Link to="/heat-map" className="navlink">
+                    heat-map
+                </Link>
             </nav>
             <Routes>
                 <Route exact path="" element={<Home />}></Route>
@@ -30,6 +35,7 @@ function App() {
                     path="/scatterplot-graph"
                     element={<ScatterplotGraph />}
                 ></Route>
+                <Route path="/heat-map" element={<HeatMap />}></Route>
             </Routes>
         </div>
     );

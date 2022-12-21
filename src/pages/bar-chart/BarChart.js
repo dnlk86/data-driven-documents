@@ -172,7 +172,7 @@ export function BarChart() {
 
     return (
         <div className={styles.barchart}>
-            <h2 id="title">d3 bar chart implementation example</h2>
+            <h2 id="title">d3 bar chart example</h2>
             <svg ref={ref}>
                 <g id="x-axis" />
                 <g id="y-axis" />

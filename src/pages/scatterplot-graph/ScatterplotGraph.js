@@ -174,7 +174,7 @@ export function ScatterplotGraph() {
 
     return (
         <div className={styles.scatterplotgraph}>
-            <h2 id="title">d3 scatterplot graph implementation example</h2>
+            <h2 id="title">d3 scatterplot graph example</h2>
             <svg ref={ref}>
                 <g id="x-axis" />
                 <g id="y-axis" />
