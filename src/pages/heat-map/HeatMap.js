@@ -33,10 +33,6 @@ export function HeatMap() {
             years.push(new Date("2016-01-01"));
             years.push(new Date("1752-01-01"));
 
-            const variances = dataset.map((v) => v.variance);
-            // console.log(Math.min(...variances));
-            // console.log(Math.max(...variances));
-
             const cellWidth = w / (2015 - 1753 + 1);
             const cellHeight = (h - 2 * padding) / 12;
 
@@ -88,17 +84,6 @@ export function HeatMap() {
                 .style("font-size", "1.2rem")
                 .style("text-decoration", "underline");
 
-            //     // source
-            //     svg.append("text")
-            //         .text("Source: " + data["source_name"])
-            //         .attr("class", "labels")
-            //         .attr("text-anchor", "start")
-            //         .attr("x", padding)
-            //         .attr("y", h - 20)
-            //         .attr("fill", "var(--color-5)")
-            //         .style("font-style", "italic")
-            //         .style("font-size", "1rem");
-
             const xScale = d3
                 .scaleTime()
                 .domain([d3.min(years), d3.max(years)])
@@ -145,6 +130,30 @@ export function HeatMap() {
                 .style("font-weight", "bold")
                 .call(yAxis);
 
+            const legendScale = d3
+                .scaleBand()
+                .domain([
+                    "t <= -4°C",
+                    "[-4,-3]°C",
+                    "[-3,-2]°C",
+                    "[-2,-1]°C",
+                    "[-1, 0]°C",
+                    "[ 0,+1]°C",
+                    "[+1,+2]°C",
+                    "[+2,+3]°C",
+                    "[+3,+4]°C",
+                    "t >= +4°C",
+                ])
+                .range([h - padding, padding]);
+
+            const legend = d3.axisRight(legendScale);
+            svg.select("#legend-scale")
+                .attr("transform", "translate(" + (w - 80) + ", 0)")
+                .style("color", "var(--color-5)")
+                .style("font-size", "0.75rem")
+                .style("font-weight", "bold")
+                .call(legend);
+
             const cellFill = (variance) => {
                 if (variance < -4) {
                     return "rgb(69, 117, 180)";
@@ -168,6 +177,18 @@ export function HeatMap() {
                     return "rgb(165, 0, 38)";
                 }
             };
+
+            const legendRectHeight = (h - 2 * padding) / 10;
+            d3.select("#legend")
+                .selectAll("rect")
+                .data([4.99, 3.99, 2.99, 1.99, 0.99, -1, -2, -3, -4, -5])
+                .enter()
+                .append("rect")
+                .attr("x", w - 90 + "px")
+                .attr("y", (d, i) => padding + i * legendRectHeight)
+                .attr("width", 10)
+                .attr("height", legendRectHeight)
+                .attr("fill", (d) => cellFill(d));
 
             svg.selectAll("rect")
                 .data(dataset)
@@ -230,6 +251,9 @@ export function HeatMap() {
             <svg ref={ref}>
                 <g id="x-axis" />
                 <g id="y-axis" />
+                <g id="legend">
+                    <g id="legend-scale" />
+                </g>
             </svg>
             <div
                 id="tooltip"
