@@ -64,13 +64,13 @@ export function HeatMap() {
 
             // y-axis-label
             svg.append("text")
-                .text("GDP")
+                .text("Month")
                 .attr("class", "labels")
                 .attr("text-anchor", "end")
                 .attr("x", padding)
-                .attr("y", 40)
+                .attr("y", 80)
                 .attr("fill", "var(--color-5)")
-                .style("font-size", "1.2rem")
+                .style("font-size", "1.0rem")
                 .style("text-decoration", "underline");
 
             // x-axis-label
@@ -78,10 +78,10 @@ export function HeatMap() {
                 .text("Year")
                 .attr("class", "labels")
                 .attr("text-anchor", "end")
-                .attr("x", w - 20)
-                .attr("y", h - 20)
+                .attr("x", w - padding)
+                .attr("y", h - 60)
                 .attr("fill", "var(--color-5)")
-                .style("font-size", "1.2rem")
+                .style("font-size", "1.0rem")
                 .style("text-decoration", "underline");
 
             const xScale = d3
