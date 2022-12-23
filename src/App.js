@@ -7,6 +7,7 @@ import { Home } from "./pages/home/Home";
 import { BarChart } from "./pages/bar-chart/BarChart";
 import { ScatterplotGraph } from "./pages/scatterplot-graph/ScatterplotGraph";
 import { HeatMap } from "./pages/heat-map/HeatMap";
+import { ChoroplethMap } from "./pages/choropleth-map/ChoroplethMap";
 
 function App() {
     return (
@@ -27,6 +28,10 @@ function App() {
                 <Link to="/heat-map" className="navlink">
                     heat-map
                 </Link>
+                /
+                <Link to="/choropleth-map" className="navlink">
+                    choropleth-map
+                </Link>
             </nav>
             <Routes>
                 <Route exact path="" element={<Home />}></Route>
@@ -36,6 +41,10 @@ function App() {
                     element={<ScatterplotGraph />}
                 ></Route>
                 <Route path="/heat-map" element={<HeatMap />}></Route>
+                <Route
+                    path="/choropleth-map"
+                    element={<ChoroplethMap />}
+                ></Route>
             </Routes>
         </div>
     );
