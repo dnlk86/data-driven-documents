@@ -3,7 +3,7 @@ import styles from "./ChoroplethMap.module.css";
 
 import * as d3 from "d3";
 import { useWindowSize } from "../../hooks/useWindowSize.js";
-import { useFetch } from "../../hooks/useFetch.js";
+// import { useFetch } from "../../hooks/useFetch.js";
 
 export function ChoroplethMap() {
     const ref = useRef();
@@ -27,17 +27,24 @@ export function ChoroplethMap() {
             .style("width", `${w}px`);
 
         const loadData = async () => {
-            const { countyData } = await fetch(
-                "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json"
-            );
-            const { eduData } = await fetch(
-                "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json"
-            );
+            const countyUrl =
+                "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json";
+            const eduUrl =
+                "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json";
 
-            return countyData, eduData;
+            const responses = await Promise.all([
+                fetch(countyUrl),
+                fetch(eduUrl),
+            ]);
+            const countyData = await responses[0].json();
+            const eduData = await responses[1].json();
+
+            return [countyData, eduData];
         };
 
-        loadData().then((countyData, eduData) => {
+        loadData().then((result) => {
+            const countyData = result[0];
+            const eduData = result[1];
             console.log(countyData);
             console.log(eduData);
 
@@ -49,7 +56,7 @@ export function ChoroplethMap() {
                 .attr("id", "title")
                 .attr("class", "labels")
                 .attr("text-anchor", "middle")
-                .attr("x", w / 2)
+                // .attr("x", w / 2)
                 .attr("y", 30)
                 .attr("fill", "var(--color-5)")
                 .style("font-size", "1.5rem")
@@ -63,13 +70,13 @@ export function ChoroplethMap() {
                 .attr("id", "description")
                 .attr("class", "labels")
                 .attr("text-anchor", "middle")
-                .attr("x", w / 2)
+                // .attr("x", w / 2)
                 .attr("y", 60)
                 .attr("fill", "var(--color-5)")
                 .style("font-size", "1.0rem")
                 .style("text-decoration", "underline");
         });
-    }, [ref, size, countyData, countyLoading, eduData, eduLoading]);
+    }, [ref, size]);
 
     return (
         <div className={styles.choroplethMap}>
