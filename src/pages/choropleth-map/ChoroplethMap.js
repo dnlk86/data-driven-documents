@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import styles from "./ChoroplethMap.module.css";
+import * as topojson from "topojson-client";
 
 import * as d3 from "d3";
 // import { useWindowSize } from "../../hooks/useWindowSize.js";
@@ -48,10 +49,10 @@ export function ChoroplethMap() {
             console.log(countyData);
             console.log(eduData);
 
-            const tooltip = d3.select("#tooltip");
-
             console.log(h);
             console.log(w);
+
+            const tooltip = d3.select("#tooltip");
 
             // choropleth-title
             svg.select("#title")
@@ -76,6 +77,13 @@ export function ChoroplethMap() {
                 .attr("fill", "var(--color-5)")
                 .style("font-size", "1.0rem")
                 .style("text-decoration", "underline");
+
+            var context = d3.select("canvas").node().getContext("2d"),
+                path = d3.geoPath().context(context);
+
+            context.beginPath();
+            path(topojson.mesh(countyData.objects.counties));
+            context.stroke();
         });
     }, [ref]);
 
@@ -87,6 +95,7 @@ export function ChoroplethMap() {
                 <g id="description"></g>
                 <g id="x-axis" />
                 <g id="y-axis" />
+                <canvas></canvas>
                 <g id="legend">
                     <g id="legend-scale" />
                 </g>

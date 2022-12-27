@@ -19,7 +19,8 @@
         "react-dom": "^18.2.0",
         "react-router": "^6.4.5",
         "react-router-dom": "^6.4.5",
-        "react-scripts": "5.0.1"
+        "react-scripts": "5.0.1",
+        "topojson-client": "^3.1.0"
     },
     "scripts": {
         "predeploy": "npm run build",
