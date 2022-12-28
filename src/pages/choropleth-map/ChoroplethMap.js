@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import styles from "./ChoroplethMap.module.css";
 import * as topojson from "topojson-client";
 import * as d3 from "d3";
-import { geoPath, geoOrthographic } from "d3-geo";
+import { geoPath } from "d3-geo";
 
 // import { useWindowSize } from "../../hooks/useWindowSize.js";
 // import { useFetch } from "../../hooks/useFetch.js";
@@ -79,22 +79,23 @@ export function ChoroplethMap() {
                 .style("font-size", "1.0rem")
                 .style("text-decoration", "underline");
 
-            // const projection = geoOrthographic();
-            // const path = geoPath(projection);
-            const path = geoPath();
+            const projection = d3.geoIdentity().scale(1.2).translate([250, 0]);
+            const path = geoPath().projection(projection);
 
-            svg.selectAll("path")
+            svg.select("#map")
+                .selectAll("path")
                 .data(
                     topojson.feature(countyData, countyData.objects.counties)
                         .features
                 )
                 .enter()
                 .append("path")
-                .attr("class", (d) => "county_" + d.id)
+                .attr("id", (d) => "county_" + d.id)
+                .attr("class", "county")
                 .attr("d", path)
-                .attr("stroke", "blue")
-                .style("stroke-width", "1px")
-                .attr("fill", "white");
+                .attr("stroke", "grey")
+                .style("stroke-width", "0.5px")
+                .attr("fill", "transparent");
         });
     }, [ref]);
 
@@ -104,11 +105,11 @@ export function ChoroplethMap() {
             <svg ref={ref}>
                 <g id="title"></g>
                 <g id="description"></g>
-                <g id="x-axis" />
-                <g id="y-axis" />
-                <g id="legend">
-                    <g id="legend-scale" />
+                <g id="map-container">
+                    <g id="map" />
                 </g>
+
+                <g id="legend"></g>
             </svg>
             <div
                 id="tooltip"
