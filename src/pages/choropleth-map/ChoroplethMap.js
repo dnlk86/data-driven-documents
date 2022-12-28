@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import styles from "./ChoroplethMap.module.css";
 import * as topojson from "topojson-client";
-
 import * as d3 from "d3";
+import { geoPath, geoOrthographic } from "d3-geo";
+
 // import { useWindowSize } from "../../hooks/useWindowSize.js";
 // import { useFetch } from "../../hooks/useFetch.js";
 
@@ -78,12 +79,22 @@ export function ChoroplethMap() {
                 .style("font-size", "1.0rem")
                 .style("text-decoration", "underline");
 
-            var context = d3.select("canvas").node().getContext("2d"),
-                path = d3.geoPath().context(context);
+            // const projection = geoOrthographic();
+            // const path = geoPath(projection);
+            const path = geoPath();
 
-            context.beginPath();
-            path(topojson.mesh(countyData.objects.counties));
-            context.stroke();
+            svg.selectAll("path")
+                .data(
+                    topojson.feature(countyData, countyData.objects.counties)
+                        .features
+                )
+                .enter()
+                .append("path")
+                .attr("class", (d) => "county_" + d.id)
+                .attr("d", path)
+                .attr("stroke", "blue")
+                .style("stroke-width", "1px")
+                .attr("fill", "white");
         });
     }, [ref]);
 
@@ -95,7 +106,6 @@ export function ChoroplethMap() {
                 <g id="description"></g>
                 <g id="x-axis" />
                 <g id="y-axis" />
-                <canvas></canvas>
                 <g id="legend">
                     <g id="legend-scale" />
                 </g>
