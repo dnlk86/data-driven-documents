@@ -24,7 +24,7 @@ export function ChoroplethMap() {
         const w = window.innerWidth * 0.9;
         // const h = Math.floor(size.height * 0.8);
         // const w = Math.floor(size.width * 0.9);
-        const padding = 100;
+        // const padding = 100;
 
         svg.style("background-color", "var(--color-1)")
             .style("height", `${h}px`)
@@ -85,6 +85,24 @@ export function ChoroplethMap() {
                 .translate([w * 0.2, h * 0.1]);
             const path = geoPath().projection(projection);
 
+            const countyFill = (bachelorsOrHigher) => {
+                if (bachelorsOrHigher < 10) {
+                    return "rgb(69, 117, 180)";
+                } else if (bachelorsOrHigher < 20) {
+                    return "rgb(116, 173, 209)";
+                } else if (bachelorsOrHigher < 30) {
+                    return "rgb(171, 217, 233)";
+                } else if (bachelorsOrHigher < 40) {
+                    return "rgb(224, 243, 248)";
+                } else if (bachelorsOrHigher < 50) {
+                    return "rgb(255, 255, 191)";
+                } else if (bachelorsOrHigher < 60) {
+                    return "rgb(254, 224, 144)";
+                } else {
+                    return "rgb(165, 0, 38)";
+                }
+            };
+
             svg.select("#map")
                 .selectAll("path")
                 .data(
@@ -98,7 +116,22 @@ export function ChoroplethMap() {
                 .attr("d", path)
                 .attr("stroke", "grey")
                 .style("stroke-width", "0.5px")
-                .attr("fill", "navy");
+                // .attr("fill", (d) => {
+                //     let data = eduData.filter(
+                //         (county) => county.fips === d.id
+                //     )[0];
+                //     if (data) {
+                //         return countyFill(data.bachelorsOrHigher);
+                //     } else {
+                //         return "fff";
+                //     }
+                // })
+                .attr("fill", (d) =>
+                    countyFill(
+                        eduData.filter((county) => county.fips === d.id)[0]
+                            .bachelorsOrHigher
+                    )
+                );
         });
     }, [ref]);
 
