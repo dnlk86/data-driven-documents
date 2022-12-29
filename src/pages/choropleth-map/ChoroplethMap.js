@@ -47,11 +47,11 @@ export function ChoroplethMap() {
         loadData().then((result) => {
             const countyData = result[0];
             const eduData = result[1];
-            console.log(countyData);
-            console.log(eduData);
+            // console.log(countyData);
+            // console.log(eduData);
 
-            console.log(h);
-            console.log(w);
+            // console.log(h);
+            // console.log(w);
 
             const tooltip = d3.select("#tooltip");
 
@@ -103,6 +103,9 @@ export function ChoroplethMap() {
                 }
             };
 
+            const retrieveCounty = (id) =>
+                eduData.filter((county) => county.fips === id)[0];
+
             svg.select("#map")
                 .selectAll("path")
                 .data(
@@ -114,41 +117,25 @@ export function ChoroplethMap() {
                 .attr("id", (d) => "county_" + d.id)
                 .attr("class", "county")
                 .attr("d", path)
+                .attr("data-fips", (d) => d.id)
+                .attr(
+                    "data-education",
+                    (d) => retrieveCounty(d.id).bachelorsOrHigher
+                )
                 .attr("stroke", "grey")
                 .style("stroke-width", "0.5px")
-                // .attr("fill", (d) => {
-                //     let data = eduData.filter(
-                //         (county) => county.fips === d.id
-                //     )[0];
-                //     if (data) {
-                //         return countyFill(data.bachelorsOrHigher);
-                //     } else {
-                //         return "fff";
-                //     }
-                // });
                 .attr("fill", (d) =>
-                    countyFill(
-                        eduData.filter((county) => county.fips === d.id)[0]
-                            .bachelorsOrHigher
-                    )
+                    countyFill(retrieveCounty(d.id).bachelorsOrHigher)
                 )
                 .on("mouseover", (e, v) => {
-                    console.log("x: " + e.clientX);
-                    console.log("y: " + e.clientY);
+                    let county = retrieveCounty(v.id);
                     tooltip.transition().duration(100).style("opacity", 0.9);
                     tooltip
-                        // .html(
-                        //     `<p>Year: ${
-                        //         v.year
-                        //     }</p><br /><p>Month: ${formatMonths(
-                        //         v.month
-                        //     )}</p><br /><p>Variance: ${v.variance.toFixed(
-                        //         3
-                        //     )}°C</p><br /><p>Temperature: ${(
-                        //         v.variance + data.baseTemperature
-                        //     ).toFixed(3)}°C</p>`
-                        // )
-                        // .attr("data-year", v.year)
+                        .html(
+                            `${county.area_name} (${county.state}): ${county.bachelorsOrHigher}%`
+                        )
+                        .attr("data-fips", county.fips)
+                        .attr("data-education", county.bachelorsOrHigher)
                         .style("left", `${e.clientX}px`)
                         .style("bottom", `${h * 1.3 - e.clientY}px`);
                     d3.select(e.currentTarget)
@@ -156,13 +143,11 @@ export function ChoroplethMap() {
                         .style("cursor", "pointer");
                 })
                 .on("mouseout", (e, v) => {
+                    let county = retrieveCounty(v.id);
                     tooltip.transition().duration(100).style("opacity", 0);
                     tooltip.html("");
                     d3.select(e.currentTarget).style("fill", () =>
-                        countyFill(
-                            eduData.filter((county) => county.fips === v.id)[0]
-                                .bachelorsOrHigher
-                        )
+                        countyFill(county.bachelorsOrHigher)
                     );
                 });
         });
@@ -188,7 +173,7 @@ export function ChoroplethMap() {
                     left: "",
                     padding: "10px",
                     textAlign: "left",
-                    width: "250px",
+                    width: "max-content",
                     height: "max-content",
                     backgroundColor: "greenyellow",
                     borderRadius: "10px",
