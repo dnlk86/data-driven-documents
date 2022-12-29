@@ -79,7 +79,10 @@ export function ChoroplethMap() {
                 .style("font-size", "1.0rem")
                 .style("text-decoration", "underline");
 
-            const projection = d3.geoIdentity().scale(1.2).translate([250, 0]);
+            const projection = d3
+                .geoIdentity()
+                .scale(h / 700)
+                .translate([w * 0.2, h * 0.1]);
             const path = geoPath().projection(projection);
 
             svg.select("#map")
@@ -95,7 +98,7 @@ export function ChoroplethMap() {
                 .attr("d", path)
                 .attr("stroke", "grey")
                 .style("stroke-width", "0.5px")
-                .attr("fill", "transparent");
+                .attr("fill", "navy");
         });
     }, [ref]);
 
