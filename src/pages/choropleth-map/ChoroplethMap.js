@@ -87,17 +87,17 @@ export function ChoroplethMap() {
 
             const countyFill = (bachelorsOrHigher) => {
                 if (bachelorsOrHigher < 10) {
-                    return "rgb(69, 117, 180)";
+                    return "rgb(255, 255, 236)";
                 } else if (bachelorsOrHigher < 20) {
-                    return "rgb(116, 173, 209)";
-                } else if (bachelorsOrHigher < 30) {
-                    return "rgb(171, 217, 233)";
-                } else if (bachelorsOrHigher < 40) {
-                    return "rgb(224, 243, 248)";
-                } else if (bachelorsOrHigher < 50) {
                     return "rgb(255, 255, 191)";
-                } else if (bachelorsOrHigher < 60) {
+                } else if (bachelorsOrHigher < 30) {
                     return "rgb(254, 224, 144)";
+                } else if (bachelorsOrHigher < 40) {
+                    return "rgb(253, 174, 97)";
+                } else if (bachelorsOrHigher < 50) {
+                    return "rgb(244, 109, 67)";
+                } else if (bachelorsOrHigher < 60) {
+                    return "rgb(215, 48, 39)";
                 } else {
                     return "rgb(165, 0, 38)";
                 }
@@ -125,13 +125,46 @@ export function ChoroplethMap() {
                 //     } else {
                 //         return "fff";
                 //     }
-                // })
+                // });
                 .attr("fill", (d) =>
                     countyFill(
                         eduData.filter((county) => county.fips === d.id)[0]
                             .bachelorsOrHigher
                     )
-                );
+                )
+                .on("mouseover", (e, v) => {
+                    console.log("x: " + e.clientX);
+                    console.log("y: " + e.clientY);
+                    tooltip.transition().duration(100).style("opacity", 0.9);
+                    tooltip
+                        // .html(
+                        //     `<p>Year: ${
+                        //         v.year
+                        //     }</p><br /><p>Month: ${formatMonths(
+                        //         v.month
+                        //     )}</p><br /><p>Variance: ${v.variance.toFixed(
+                        //         3
+                        //     )}°C</p><br /><p>Temperature: ${(
+                        //         v.variance + data.baseTemperature
+                        //     ).toFixed(3)}°C</p>`
+                        // )
+                        // .attr("data-year", v.year)
+                        .style("left", `${e.clientX}px`)
+                        .style("bottom", `${h * 1.3 - e.clientY}px`);
+                    d3.select(e.currentTarget)
+                        .style("fill", "greenyellow")
+                        .style("cursor", "pointer");
+                })
+                .on("mouseout", (e, v) => {
+                    tooltip.transition().duration(100).style("opacity", 0);
+                    tooltip.html("");
+                    d3.select(e.currentTarget).style("fill", () =>
+                        countyFill(
+                            eduData.filter((county) => county.fips === v.id)[0]
+                                .bachelorsOrHigher
+                        )
+                    );
+                });
         });
     }, [ref]);
 
