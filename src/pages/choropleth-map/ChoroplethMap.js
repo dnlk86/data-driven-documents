@@ -4,27 +4,15 @@ import * as topojson from "topojson-client";
 import * as d3 from "d3";
 import { geoPath } from "d3-geo";
 
-// import { useWindowSize } from "../../hooks/useWindowSize.js";
-// import { useFetch } from "../../hooks/useFetch.js";
-
 export function ChoroplethMap() {
     const ref = useRef();
-    // const size = useWindowSize();
-    // const { countyData, countyLoading } = useFetch(
-    //     "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json"
-    // );
-    // const { eduData, eduLoading } = useFetch(
-    //     "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json"
-    // );
 
     useEffect(() => {
         const svg = d3.select(ref.current);
 
         const h = window.innerHeight * 0.8;
         const w = window.innerWidth * 0.9;
-        // const h = Math.floor(size.height * 0.8);
-        // const w = Math.floor(size.width * 0.9);
-        // const padding = 100;
+        const padding = 100;
 
         svg.style("background-color", "var(--color-1)")
             .style("height", `${h}px`)
@@ -47,11 +35,6 @@ export function ChoroplethMap() {
         loadData().then((result) => {
             const countyData = result[0];
             const eduData = result[1];
-            // console.log(countyData);
-            // console.log(eduData);
-
-            // console.log(h);
-            // console.log(w);
 
             const tooltip = d3.select("#tooltip");
 
@@ -150,6 +133,41 @@ export function ChoroplethMap() {
                         countyFill(county.bachelorsOrHigher)
                     );
                 });
+
+            const legendScale = d3
+                .scaleBand()
+                .domain([
+                    "< 10%",
+                    "< 20%",
+                    "< 30%",
+                    "< 40%",
+                    "< 50%",
+                    "< 60%",
+                    "< 70%",
+                ])
+                .range([h - padding, padding]);
+
+            const legend = d3.axisRight(legendScale);
+            svg.select("#legend-scale")
+                .attr("transform", "translate(" + (w - 80) + ", 0)")
+                .style("color", "var(--color-5)")
+                .style("font-size", "0.75rem")
+                .style("font-weight", "bold")
+                .call(legend);
+
+            const legendRectHeight = (h - 2 * padding) / 7;
+            d3.select("#legend")
+                .selectAll("rect")
+                .data([60, 50, 40, 30, 20, 10, 0])
+                .enter()
+                .append("rect")
+                .attr("x", w - 90 + "px")
+                .attr("y", (d, i) => padding + i * legendRectHeight)
+                .attr("width", 10)
+                .attr("height", legendRectHeight)
+                .attr("fill", (d) => countyFill(d))
+                .attr("stroke", "grey")
+                .style("stroke-width", "0.5px");
         });
     }, [ref]);
 
@@ -162,8 +180,9 @@ export function ChoroplethMap() {
                 <g id="map-container">
                     <g id="map" />
                 </g>
-
-                <g id="legend"></g>
+                <g id="legend">
+                    <g id="legend-scale" />
+                </g>
             </svg>
             <div
                 id="tooltip"
