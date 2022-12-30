@@ -34,6 +34,7 @@ export function Home() {
                 <li>axios for API requests</li>
                 <li>gh-pages for deployment</li>
                 <li>fontawesome for icons</li>
+                <li>d3-geo & topojson-client for maps</li>
             </ul>
             <br />
             <h3>A sidenote.</h3>
