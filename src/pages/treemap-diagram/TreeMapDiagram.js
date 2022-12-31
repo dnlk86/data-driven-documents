@@ -39,6 +39,10 @@ export function TreeMapDiagram() {
             const kickstarterData = result[1];
             const movieData = result[1];
 
+            console.log(videogameData);
+            console.log(kickstarterData);
+            console.log(movieData);
+
             const tooltip = d3.select("#tooltip");
 
             // choropleth-title
