@@ -39,9 +39,9 @@ export function TreeMapDiagram() {
             const kickstarterData = result[1];
             const movieData = result[1];
 
-            console.log(videogameData);
-            console.log(kickstarterData);
-            console.log(movieData);
+            // console.log(videogameData);
+            // console.log(kickstarterData);
+            // console.log(movieData);
 
             const tooltip = d3.select("#tooltip");
 
@@ -66,6 +66,28 @@ export function TreeMapDiagram() {
                 .attr("fill", "var(--color-5)")
                 .style("font-size", "1.0rem")
                 .style("text-decoration", "underline");
+
+            const root = d3
+                .hierarchy(videogameData)
+                .sum((d) => d.value)
+                .sort((a, b) => b.value - a.value);
+
+            const treemapRoot = d3.treemap().size([w, h]).padding(1)(root);
+
+            const nodes = svg
+                .selectAll("g")
+                .data(treemapRoot.leaves())
+                .join("g")
+                .attr("transform", (d) => `translate(${d.x0},${d.y0})`);
+
+            const fader = (color) => d3.interpolateRgb(color, "#fff")(0.3);
+            const colorScale = d3.scaleOrdinal(d3.schemeCategory10.map(fader));
+
+            nodes
+                .append("rect")
+                .attr("width", (d) => d.x1 - d.x0)
+                .attr("height", (d) => d.y1 - d.y0)
+                .attr("fill", (d) => colorScale(d.category));
         });
     }, [ref]);
 
