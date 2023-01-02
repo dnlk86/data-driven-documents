@@ -36,8 +36,8 @@ export function TreeMapDiagram() {
 
         loadData().then((result) => {
             const videogameData = result[0];
-            const kickstarterData = result[1];
-            const movieData = result[1];
+            // const kickstarterData = result[1];
+            // const movieData = result[1];
 
             // console.log(videogameData);
             // console.log(kickstarterData);
@@ -67,14 +67,21 @@ export function TreeMapDiagram() {
                 .style("font-size", "1.0rem")
                 .style("text-decoration", "underline");
 
+            const map = svg
+                .select("#map")
+                .attr("transform", `translate(${padding}, ${padding})`);
+
             const root = d3
                 .hierarchy(videogameData)
-                .sum((d) => d.value)
-                .sort((a, b) => b.value - a.value);
+                .sum((d) => parseFloat(d.value))
+                .sort((a, b) => parseFloat(b.value) - parseFloat(a.value));
 
-            const treemapRoot = d3.treemap().size([w, h]).padding(1)(root);
+            const treemapRoot = d3
+                .treemap()
+                .size([w - 2 * padding, h - 2 * padding])
+                .padding(1)(root);
 
-            const nodes = svg
+            const nodes = map
                 .selectAll("g")
                 .data(treemapRoot.leaves())
                 .join("g")
@@ -87,7 +94,18 @@ export function TreeMapDiagram() {
                 .append("rect")
                 .attr("width", (d) => d.x1 - d.x0)
                 .attr("height", (d) => d.y1 - d.y0)
-                .attr("fill", (d) => colorScale(d.category));
+                .attr("fill", (d) => colorScale(d.data.category));
+
+            const fontSize = 12;
+
+            nodes
+                .append("text")
+                .text((d) => `${d.data.name} ${d.data.value}`)
+                .attr("data-width", (d) => d.x1 - d.x0)
+                .attr("font-size", `${fontSize}px`)
+                .attr("x", 3)
+                .attr("y", fontSize);
+            //   .call(wrapText);
         });
     }, [ref]);
 
