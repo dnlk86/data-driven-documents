@@ -39,10 +39,6 @@ export function TreeMapDiagram() {
             // const kickstarterData = result[1];
             // const movieData = result[1];
 
-            // console.log(videogameData);
-            // console.log(kickstarterData);
-            // console.log(movieData);
-
             const tooltip = d3.select("#tooltip");
 
             // choropleth-title
@@ -87,25 +83,77 @@ export function TreeMapDiagram() {
                 .join("g")
                 .attr("transform", (d) => `translate(${d.x0},${d.y0})`);
 
-            const fader = (color) => d3.interpolateRgb(color, "#fff")(0.3);
+            const fader = (color) => d3.interpolateRgb(color, "#fff")(0.25);
             const colorScale = d3.scaleOrdinal(d3.schemeCategory10.map(fader));
 
             nodes
                 .append("rect")
+                .attr("class", "tile")
+                .attr("data-name", (d) => d.data.name)
+                .attr("data-category", (d) => d.data.category)
+                .attr("data-value", (d) => d.data.value)
                 .attr("width", (d) => d.x1 - d.x0)
                 .attr("height", (d) => d.y1 - d.y0)
                 .attr("fill", (d) => colorScale(d.data.category));
 
-            const fontSize = 12;
-
             nodes
                 .append("text")
-                .text((d) => `${d.data.name} ${d.data.value}`)
-                .attr("data-width", (d) => d.x1 - d.x0)
-                .attr("font-size", `${fontSize}px`)
-                .attr("x", 3)
-                .attr("y", fontSize);
-            //   .call(wrapText);
+                .text((d) => d.data.value)
+                .attr("font-size", `10px`)
+                .attr("x", 5)
+                .attr("y", 15)
+                .style("pointer-events", "none");
+
+            nodes
+                .on("mouseover", (e, v) => {
+                    tooltip.transition().duration(100).style("opacity", 0.9);
+                    tooltip
+                        .html(
+                            `Platform: ${v.data.category}<br />Title: ${v.data.name}<br />Value: ${v.data.value} Million`
+                        )
+                        .attr("data-value", v.data.value)
+                        .style("left", `${e.clientX}px`)
+                        .style("bottom", `${h * 1.3 - e.clientY}px`);
+                    d3.select(e.currentTarget)
+                        .style("fill", "greenyellow")
+                        .style("cursor", "pointer");
+                })
+                .on("mouseout", (e, v) => {
+                    tooltip.transition().duration(100).style("opacity", 0);
+                    tooltip.html("");
+                    d3.select(e.currentTarget).style("fill", "black");
+                });
+
+            const categories = treemapRoot.data.children;
+
+            const legendScale = d3
+                .scaleBand()
+                .domain(categories.map((child) => child.name).reverse())
+                .range([h - padding, padding]);
+
+            const legend = d3.axisRight(legendScale);
+            svg.select("#legend-scale")
+                .attr("transform", "translate(" + (w - 80) + ", 0)")
+                .style("color", "var(--color-5)")
+                .style("font-size", "0.75rem")
+                .style("font-weight", "bold")
+                .call(legend);
+
+            const legendRectHeight = (h - 2 * padding) / categories.length;
+
+            d3.select("#legend")
+                .selectAll("rect")
+                .data(categories)
+                .enter()
+                .append("rect")
+                .attr("class", "legend-item")
+                .attr("x", w - 90 + "px")
+                .attr("y", (d, i) => padding + i * legendRectHeight)
+                .attr("width", 10)
+                .attr("height", legendRectHeight)
+                .attr("fill", (d) => colorScale(d.name))
+                .attr("stroke", "grey")
+                .style("stroke-width", "0.5px");
         });
     }, [ref]);
 
